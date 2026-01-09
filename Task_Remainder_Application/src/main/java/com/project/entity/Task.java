@@ -36,17 +36,14 @@ public class Task {
 
     private LocalDate completedAt;
 
-    // ================= LIFECYCLE =================
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDate.now();
     }
 
-    // ================= CONSTRUCTORS =================
     public Task() {
     }
 
-    // ================= GETTERS & SETTERS =================
     public Integer getId() {
         return id;
     }
@@ -111,3 +108,4 @@ public class Task {
         this.completedAt = completedAt;
     }
 }
+
