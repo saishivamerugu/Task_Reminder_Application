@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Reminder | Tasks</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Small JS for clear filters -->
+    <script>
+        function clearFilters() {
+            document.getElementById("keyword").value = "";
+            document.getElementById("status").value = "";
+            document.getElementById("priority").value = "";
+            document.getElementById("sort").value = "";
+            document.getElementById("filterForm").submit();
+        }
+    </script>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <!-- ================= HEADER ================= -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📋 Task Reminder</h2>
+        <a th:href="@{/api/tasks/add}" class="btn btn-primary">
+            + Add Task
+        </a>
+    </div>
+
+    <!-- ================= FILTER FORM ================= -->
+    <form id="filterForm" th:action="@{/api/tasks}" method="get" class="row g-2 mb-4">
+
+        <!-- Search Title -->
+        <div class="col-md-3">
+            <input type="text"
+                   id="keyword"
+                   name="keyword"
+                   class="form-control"
+                   placeholder="Search title..."
+                   th:value="${param.keyword}">
+        </div>
+
+        <!-- Status -->
+        <div class="col-md-2">
+            <select id="status" name="status" class="form-select">
+                <option value="">All Status</option>
+                <option value="PENDING" th:selected="${param.status == 'PENDING'}">Pending</option>
+                <option value="IN_PROGRESS" th:selected="${param.status == 'IN_PROGRESS'}">In Progress</option>
+                <option value="COMPLETED" th:selected="${param.status == 'COMPLETED'}">Completed</option>
+            </select>
+        </div>
+
+        <!-- Priority -->
+        <div class="col-md-2">
+            <select id="priority" name="priority" class="form-select">
+                <option value="">All Priority</option>
+                <option value="LOW" th:selected="${param.priority == 'LOW'}">Low</option>
+                <option value="MEDIUM" th:selected="${param.priority == 'MEDIUM'}">Medium</option>
+                <option value="HIGH" th:selected="${param.priority == 'HIGH'}">High</option>
+            </select>
+        </div>
+
+        <!-- Sort By -->
+        <div class="col-md-3">
+            <select id="sort" name="sort" class="form-select">
+                <option value="">Sort By</option>
+                <option value="title" th:selected="${param.sort == 'title'}">Title</option>
+                <option value="dueDate" th:selected="${param.sort == 'dueDate'}">Due Date</option>
+                <option value="priority" th:selected="${param.sort == 'priority'}">Priority</option>
+                <option value="createdAt" th:selected="${param.sort == 'createdAt'}">Created Date</option>
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-md-2 d-grid gap-1">
+            <button type="submit" class="btn btn-success">Apply</button>
+            <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+        </div>
+
+    </form>
+
+    <!-- ================= ALERTS ================= -->
+    <div th:if="${successMessage}" class="alert alert-success">
+        <span th:text="${successMessage}"></span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- ================= TASK TABLE ================= -->
+    <table class="table table-bordered table-hover bg-white">
+        <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.priority}"></td>
+
+            <td>
+                <span th:text="${task.status}"
+                      th:classappend="
+                      ${task.status.name() == 'COMPLETED'} ? 'text-success fw-bold' :
+                      (${task.status.name() == 'IN_PROGRESS'} ? 'text-warning fw-bold' :
+                      'text-secondary fw-bold')">
+                </span>
+            </td>
+
+            <td th:text="${task.createdAt}"></td>
+            <td th:text="${task.dueDate}"></td>
+
+            <td class="d-flex gap-2">
+                <a th:href="@{/api/tasks/update/{id}(id=${task.id})}"
+                   class="btn btn-sm btn-warning"
+                   th:if="${task.status.name() != 'COMPLETED'}">Edit</a>
+
+                <a th:href="@{/api/tasks/delete/{id}(id=${task.id})}"
+                   class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure?')">Delete</a>
+
+                <a th:href="@{/api/tasks/markAsDone/{id}(id=${task.id})}"
+                   class="btn btn-sm btn-success"
+                   th:if="${task.status.name() != 'COMPLETED'}">Done</a>
+            </td>
+        </tr>
+
+        <tr th:if="${tasks.size() == 0}">
+            <td colspan="6" class="text-center text-muted">
+                No tasks found
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ================= PAGINATION ================= -->
+    <nav th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/api/tasks(page=${currentPage - 1}, keyword=${param.keyword},
+                   status=${param.status}, priority=${param.priority}, sort=${param.sort})}">
+                    Previous
+                </a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${pageNumbers}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{/api/tasks(page=${i}, keyword=${param.keyword},
+                   status=${param.status}, priority=${param.priority}, sort=${param.sort})}">
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/api/tasks(page=${currentPage + 1}, keyword=${param.keyword},
+                   status=${param.status}, priority=${param.priority}, sort=${param.sort})}">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+</div>
+
+</body>
+</html>
