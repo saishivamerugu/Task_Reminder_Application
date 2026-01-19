@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | TimeIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #8360c3, #2ebf91);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 14px;
+      width: 380px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #2ebf91;
+    }
+
+    .btn {
+      width: 100%;
+      background: #2ebf91;
+      color: #fff;
+      padding: 12px;
+      border-radius: 30px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #239b75;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #c0392b;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .success {
+      background: #e8fff3;
+      color: #27ae60;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #2ebf91;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .pwd-info {
+      font-size: 12px;
+      margin-top: 5px;
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form class="card" th:action="@{/auth/register}" method="post">
+
+    <h2>Create Account</h2>
+
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
+
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text" name="name" required minlength="3">
+    </div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" name="email" required>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="pwd" name="password" required minlength="8">
+      <div class="pwd-info">Minimum 8 characters</div>
+    </div>
+
+    <div class="input-group">
+      <label>Confirm Password</label>
+      <input type="password" id="cpwd" name="confirmPassword" required>
+    </div>
+
+    <button class="btn" type="submit" id="submitBtn">Register</button>
+
+    <div class="links">
+      Already have an account?
+      <a href="/auth/login">Login</a>
+    </div>
+
+  </form>
+
+  <script>
+    const pwd = document.getElementById("pwd");
+    const cpwd = document.getElementById("cpwd");
+    const btn = document.getElementById("submitBtn");
+
+    function validatePasswords() {
+      if (cpwd.value && pwd.value !== cpwd.value) {
+        cpwd.style.borderColor = "#c0392b";
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+      } else {
+        cpwd.style.borderColor = "#ccc";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+      }
+    }
+
+    pwd.addEventListener("input", validatePasswords);
+    cpwd.addEventListener("input", validatePasswords);
+  </script>
+
+</body>
+</html>

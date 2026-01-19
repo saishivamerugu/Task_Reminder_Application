@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile | TimeIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      width: 460px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .image-box {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .image-box img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #667eea;
+    }
+
+    .info-group {
+      margin-bottom: 18px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+
+    .info-group label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .info-group .value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .verified-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .verified-badge.yes {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .verified-badge.no {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .btn {
+      width: 100%;
+      background: #667eea;
+      color: #fff;
+      padding: 12px;
+      border-radius: 30px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: #5568d3;
+    }
+
+    .btn.secondary {
+      background: #6b7280;
+    }
+
+    .btn.secondary:hover {
+      background: #4b5563;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h2>My Profile</h2>
+
+  <div class="image-box">
+    <img th:src="${profile.profileImage != null ? profile.profileImage : '/images/default.png'}"
+         alt="Profile">
+  </div>
+
+  <div class="info-group">
+    <label>Name</label>
+    <div class="value" th:text="${profile.name}">John Doe</div>
+  </div>
+
+  <div class="info-group">
+    <label>Email</label>
+    <div class="value">
+      <span th:text="${profile.email}">john@example.com</span>
+      <span class="verified-badge"
+            th:classappend="${profile.verified ? 'yes' : 'no'}"
+            th:text="${profile.verified ? '✓ Verified' : '✗ Not Verified'}">
+      </span>
+    </div>
+  </div>
+
+  <div class="info-group">
+    <label>Member Since</label>
+    <div class="value" th:text="${#temporals.format(profile.createdAt, 'dd MMM yyyy')}">01 Jan 2026</div>
+  </div>
+
+  <a href="/profile/edit" class="btn">Edit Profile</a>
+  <a href="/dashboard" class="btn secondary">← Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>TimeIt | Task Reminder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 60px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    h1 span {
+      color: #ffd86f;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    a.btn {
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #ffd86f;
+      color: #333;
+    }
+
+    .btn-primary:hover {
+      background: #ffcb3f;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 2px solid #fff;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background: #fff;
+      color: #333;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Welcome to <span>TimeIt</span></h1>
+    <p>
+      Plan smarter. Stay focused.
+      Track your tasks, set reminders, and finish on time — every time.
+    </p>
+
+    <div class="btn-group">
+      <a href="/auth/login" class="btn btn-primary">Login</a>
+      <a href="/auth/register" class="btn btn-secondary">Create Account</a>
+    </div>
+
+    <footer>
+      © 2026 TimeIt — Task Reminder App
+    </footer>
+  </div>
+
+  <script>
+    // simple animation on load
+    document.querySelector(".container").style.opacity = "0";
+    document.querySelector(".container").style.transform = "scale(0.9)";
+
+    window.onload = () => {
+      setTimeout(() => {
+        const c = document.querySelector(".container");
+        c.style.transition = "all 0.6s ease";
+        c.style.opacity = "1";
+        c.style.transform = "scale(1)";
+      }, 200);
+    };
+  </script>
+
+</body>
+</html>

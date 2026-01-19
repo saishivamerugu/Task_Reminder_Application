@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP | TimeIt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #42275a, #734b6d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 14px;
+      width: 360px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    p {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .timer {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #2ecc71;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 6px;
+    }
+
+    .btn {
+      width: 100%;
+      background: #734b6d;
+      color: #fff;
+      padding: 12px;
+      border-radius: 30px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #5e3c59;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #c0392b;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .success {
+      background: #e8fff3;
+      color: #27ae60;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .links {
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #734b6d;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form class="card" th:action="@{/auth/verify-reset-otp}" method="post">
+
+    <h2>Verify OTP</h2>
+    <p>Enter the 6-digit code sent to your email</p>
+
+    <div class="timer" id="timer">05:00</div>
+
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
+
+    <input type="hidden" name="email" th:value="${email}"/>
+
+    <div class="input-group">
+      <label>OTP</label>
+      <input type="text" name="otp" maxlength="6" required>
+    </div>
+
+    <button class="btn" type="submit">Verify</button>
+
+    <div class="links">
+      <a href="/auth/login">Back to Login</a>
+    </div>
+
+  </form>
+
+  <script>
+    let time = 300;
+    const timerEl = document.getElementById("timer");
+
+    const interval = setInterval(() => {
+      let m = Math.floor(time / 60);
+      let s = time % 60;
+
+      timerEl.textContent =
+        (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+
+      if (time <= 0) {
+        clearInterval(interval);
+        timerEl.textContent = "Expired";
+        timerEl.style.background = "#e74c3c";
+      }
+      time--;
+    }, 1000);
+
+    const otpInput = document.querySelector("input[name='otp']");
+    otpInput.addEventListener("input", () => {
+      otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
+    });
+  </script>
+
+</body>
+</html>
