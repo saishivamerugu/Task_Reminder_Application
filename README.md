@@ -1,9 +1,4 @@
-# Task_Reminder_Application
-Got you 👍
-Here’s a **clean, professional `README.md`** you can **directly copy-paste** into your GitHub repo for **Task Reminder Application**.
-It’s **college-project friendly + interview-ready**.
 
----
 
 
 # Task Reminder Application
